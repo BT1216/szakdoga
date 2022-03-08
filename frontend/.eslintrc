@@ -1,0 +1,19 @@
+{
+    "extends": ["react-app", "airbnb", "plugin:react/jsx-runtime"],
+    "plugins": [
+        "eslint-plugin-import",
+        "eslint-plugin-jsdoc",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-unicorn",
+        "react"
+    ],
+    "rules": {
+        "semi": "error",
+        "quotes": ["error", "double"],
+        "import/no-unresolved": 0,
+    },
+    "settings": {
+        "import/core-modules": ["react"]
+    },
+    "root": true
+}
