@@ -1,0 +1,18 @@
+@import "../../styles/variables";
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 300px;
+    height: calc(100vh - #{$header-height} - 2 * #{$header-padding-x});
+
+    .loginInput {
+        margin-bottom: 10px;
+        
+        &.textBox {
+            border: 2px solid #000;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+@import '../../../../styles/variables';
+
+.menuItem {
+    font-size: 22px;
+    padding-left: 10px;
+
+    &.active {
+        a {
+            font-weight: 900;
+            position: relative;
+
+            &:after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                background: rgba($color: #000, $alpha: 1);
+                left: 0;
+                bottom: -5px;
+                padding-top: 2px;
+            }
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: $menu-item-color;
+    }
+}
