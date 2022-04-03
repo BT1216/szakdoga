@@ -1,11 +1,7 @@
-Teszt
-
-## Docker compose
-
+## Docker compose 
 ### React application with a NodeJS backend and a MySQL database
 
 Project structure:
-
 ```
 .
 ├── backend
@@ -21,7 +17,6 @@ Project structure:
 ```
 
 [_docker-compose.yaml_](docker-compose.yaml)
-
 ```
 services:
   backend:
@@ -43,14 +38,13 @@ services:
     - 3000:3000
     ...
 ```
-
 The compose file defines an application with three services `frontend`, `backend` and `db`.
 When deploying the application, docker-compose maps port 3000 of the frontend service container to port 3000 of the host as specified in the file.
 Make sure port 3000 on the host is not already being in use.
 
 > ℹ️ **_INFO_**  
 > For compatibility purpose between `AMD64` and `ARM64` architecture, we use a MariaDB as database instead of MySQL.  
-> Using MysSQL image is still possible by uncommenting the following line in the Compose file  
+> Using MysSQL image is still possible by uncommenting the following line in the Compose file   
 > `#image: mysql:8.0.27`
 
 ## Deploy with docker-compose
@@ -72,7 +66,6 @@ Creating react-express-mysql_frontend_1 ... done
 ## Expected result
 
 Listing containers must show containers running and the port mapping as below:
-
 ```
 $ docker ps
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                   PORTS                                                  NAMES
@@ -85,15 +78,14 @@ After the application starts, navigate to `http://localhost:3000` in your web br
 
 ![page](./output.png)
 
-The backend service container has the port 80 mapped to 80 on the host.
 
+The backend service container has the port 80 mapped to 80 on the host.
 ```
 $ curl localhost:80
 {"message":"Hello from MySQL 8.0.19"}
 ```
 
 Stop and remove the containers
-
 ```
 $ docker-compose down
 Stopping react-express-mysql_frontend_1 ... done

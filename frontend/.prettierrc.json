@@ -1,0 +1,6 @@
+{
+  "singleQuote": false,
+  "jsxBracketSameLine": false,
+  "rcVerbose": true,
+  "trailingComma": "all"
+}

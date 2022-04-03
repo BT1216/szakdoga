@@ -1,21 +1,30 @@
 {
-    "extends": ["react-app", "airbnb", "plugin:react/jsx-runtime"],
-    "plugins": [
-        "eslint-plugin-import",
-        "eslint-plugin-jsdoc",
-        "eslint-plugin-react-hooks",
-        "eslint-plugin-unicorn",
-        "react"
-    ],
-    "rules": {
-        "semi": "error",
-        "quotes": ["error", "double"],
-        "import/no-unresolved": 0
-        // "react/forbid-prop-types": "off",
-        // "import/no-extraneous-dependencies": "off"
-    },
-    "settings": {
-        "import/core-modules": ["react"]
-    },
-    "root": true
+  "parserOptions": {
+    "ecmaFeatures": {
+      "ecmaVersion": 2020,
+      "jsx": true
+    }
+  },
+  "extends": ["react-app", "airbnb", "plugin:react/jsx-runtime"],
+  "plugins": [
+    "eslint-plugin-import",
+    "eslint-plugin-react-hooks",
+    "eslint-plugin-unicorn",
+    "react"
+  ],
+  "rules": {
+    "semi": "error",
+    "quotes": ["error", "double"],
+    "import/no-unresolved": 0,
+    "react/jsx-props-no-spreading": 0
+  },
+  "settings": {
+    "import/core-modules": ["react"]
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "root": true
 }

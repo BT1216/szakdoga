@@ -1,33 +1,44 @@
-import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext/AuthProvider";
+import { USER } from "../../fakeApi/fakeUsers";
+import menuApi, { LOGGEDIN, LOGGEDOUT } from "../../fakeApi/menuItems";
 
 import MenuItem from "./components/MenuItem";
 import styles from "./Header.module.scss";
 
-function Header({ menuItem }) {
+/**
+ * @param hasAuth
+ * @param scope
+ */
+function getMenuItems(hasAuth, scope) {
+  if (!hasAuth) {
+    return menuApi.getMenuItemsForScope(LOGGEDOUT, USER);
+  }
+
+  const loggedInMenuItems = menuApi.getMenuItemsForScope(LOGGEDIN, scope);
+  return loggedInMenuItems;
+}
+
+function Header() {
   const location = useLocation();
+  const { isAuthenticated, loggedInUser } = useAuth();
   return (
     <header className={styles.headerRootContainer}>
       <ul className={styles.menuContainer}>
-        {
-            menuItem.map((value) => (
-              <MenuItem
-                isActive={value.target === location.pathname}
-                to={value.target}
-                label={value.label}
-              />
-            ))
-        }
+        {getMenuItems(
+          isAuthenticated,
+          loggedInUser ? loggedInUser.userLevel : USER
+        ).map((value) => (
+          <MenuItem
+            isActive={value.target === location.pathname}
+            to={value.target}
+            label={value.label}
+            key={value.target}
+          />
+        ))}
       </ul>
     </header>
   );
 }
-
-Header.propTypes = {
-  menuItem: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    target: PropTypes.string.isRequired,
-  })).isRequired,
-};
 
 export default Header;
