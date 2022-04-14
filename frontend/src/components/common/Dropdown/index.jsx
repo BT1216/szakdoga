@@ -1,26 +1,22 @@
 import PropTypes from "prop-types";
+import Select from "react-select";
 
 import styles from "./Dropdown.module.scss";
 
-function DropDown({ labelValue, id, options, setValue, loading }) {
+function DropDown({ labelValue, id, options, setValue, value, loading }) {
   function handleChange(event) {
-    const selectedObject = options[event.target.options.selectedIndex];
-    setValue(selectedObject);
+    setValue(event);
   }
   return (
     <div className={styles.dropDownRootContainer}>
-      <label htmlFor={id}>{labelValue}</label>
-      {!loading ? (
-        <select onChange={(event) => handleChange(event)} name={id} id={id}>
-          {options.map((option) => (
-            <option key={options.value} value={options.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <p>loading</p>
-      )}
+      <p>{labelValue}</p>
+      <Select
+        onChange={(event) => handleChange(event)}
+        options={options}
+        value={value}
+        isLoading={loading}
+        placeholder={labelValue}
+      />
     </div>
   );
 }
@@ -30,12 +26,13 @@ DropDown.propTypes = {
   id: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.number.isRequired,
-      label: PropTypes.string.isRequired,
+      value: PropTypes.number,
+      label: PropTypes.string,
     }),
   ).isRequired,
   setValue: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 export default DropDown;

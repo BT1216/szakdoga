@@ -1,11 +1,12 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
 import { useState } from "react";
 import DropDown from "../../../../components/common/Dropdown";
+import useApi from "../../../../hooks/useAPI";
 
 import ImageUpload from "../ImageUpload";
-import NewTaskContext from "./Context";
 import Button from "../../../../components/common/Button";
 import Input from "../../../../components/common/Input";
+import { apiEndpoints } from "../../../../api";
+import styles from "./NewTask.module.scss";
 
 const DEFAULT_OPTION = {
   value: "",
@@ -18,12 +19,21 @@ function NewTask() {
   const [period, setPeriod] = useState(DEFAULT_OPTION);
   const [taskPoint, setTaskPoint] = useState();
   const [taskNo, setTaskNo] = useState();
-  // const [taskTitle, setTaskTitle] = useState();
+  const { apiReponse, loading } = useApi({
+    method: "GET",
+    pathName: apiEndpoints.periods,
+  });
 
-  const periodOptions = [
-    { label: "2021 Május", value: 1 },
-    { label: "2023 Május", value: 2 },
-  ];
+  function transformPeriodApiRespnse() {
+    if (apiReponse && Array.isArray(apiReponse)) {
+      return apiReponse.map((currentPeriod) => ({
+        label: currentPeriod.periodName,
+        value: currentPeriod.id,
+      }));
+    }
+
+    return [];
+  }
 
   const topicOptions = [
     { label: "Kombinatorika", value: 1 },
@@ -41,51 +51,42 @@ function NewTask() {
   }
 
   return (
-    <NewTaskContext.Provider
-      value={{
-        taskImagePath,
-        setTaskImagePath,
-        topic,
-        setTopic,
-        period,
-        setPeriod,
-        taskPoint,
-        setTaskPoint,
-      }}
-    >
-      <div>
-        <ImageUpload setTaskImagePath={setTaskImagePath} />
-        <DropDown
-          labelValue="Válassz időszakot"
-          id="period"
-          options={periodOptions}
-          setValue={setPeriod}
-          loading={false}
-        />
-        <DropDown
-          labelValue="Válassz témakör"
-          id="topic"
-          options={topicOptions}
-          setValue={setTopic}
-          loading={false}
-        />
-        <Input
-          value={taskPoint}
-          onChangeHandler={setTaskPoint}
-          placeholder="Pontszám"
-          inputLabel="Pontszám"
-          inputType="number"
-        />
-        <Input
-          value={taskNo}
-          onChangeHandler={setTaskNo}
-          placeholder="Feladat sorszáma"
-          inputLabel="Feladat sorszáma"
-          inputType="number"
-        />
-        <Button label="Mentés" onClickHandler={() => handleNewTaskSave()} />
-      </div>
-    </NewTaskContext.Provider>
+    <div className={styles.newTaskRootContainer}>
+      <ImageUpload setTaskImagePath={setTaskImagePath} />
+      <DropDown
+        labelValue="Válassz időszakot"
+        id="period"
+        options={transformPeriodApiRespnse()}
+        setValue={setPeriod}
+        loading={loading}
+        value={period}
+      />
+      <DropDown
+        labelValue="Válassz témakört"
+        id="topic"
+        options={topicOptions}
+        setValue={setTopic}
+        loading={false}
+        value={topic}
+      />
+      <Input
+        value={taskPoint}
+        onChangeHandler={setTaskPoint}
+        placeholder="Pontszám"
+        inputLabel="Pontszám"
+        inputType="number"
+        className={styles.input}
+      />
+      <Input
+        value={taskNo}
+        onChangeHandler={setTaskNo}
+        placeholder="Feladat sorszáma"
+        inputLabel="Feladat sorszáma"
+        inputType="number"
+        className={styles.input}
+      />
+      <Button label="Mentés" onClickHandler={() => handleNewTaskSave()} />
+    </div>
   );
 }
 
