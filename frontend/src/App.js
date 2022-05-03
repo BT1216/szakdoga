@@ -10,6 +10,9 @@ import AuthProvider from "./context/AuthContext/AuthProvider";
 import Tasks from "./pages/Tasks";
 import SignUp from "./pages/SignUp";
 import SignOut from "./pages/SignOut";
+import { adminRoutes } from "./fakeApi/menuItems";
+import Edit from "./pages/Admin/pages/Edit";
+import AllTask from "./pages/Admin/pages/AllTasks";
 
 function App() {
   return (
@@ -22,10 +25,26 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signout" element={<SignOut />} />
           <Route
-            path="/admin"
+            path={adminRoutes.newTask}
             element={
               <ProtectedRoute>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={`${adminRoutes.allTask}`}
+            element={
+              <ProtectedRoute>
+                <AllTask />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={`${adminRoutes.editTask}/:taskId`}
+            element={
+              <ProtectedRoute>
+                <Edit />
               </ProtectedRoute>
             }
           />
