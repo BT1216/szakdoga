@@ -5,6 +5,10 @@ const apiEndpoints = {
   periods: "/periods",
   newTask: "/tasks",
   allTask: "/tasks/all",
+  categories: "/categories",
+  deleteTask: "/tasks/delete",
+  getTaskById: "/tasks",
+  modifyTask: "/tasks",
 };
 
 export default apiEndpoints;
