@@ -5,7 +5,7 @@
       "jsx": true
     }
   },
-  "extends": ["react-app", "airbnb", "plugin:react/jsx-runtime"],
+  "extends": ["react-app", "airbnb", "plugin:react/jsx-runtime", "prettier"],
   "plugins": [
     "eslint-plugin-import",
     "eslint-plugin-react-hooks",
@@ -13,6 +13,8 @@
     "react"
   ],
   "rules": {
+    "func-names": ["error", "as-needed"],
+    "import/prefer-default-export": "off",
     "semi": "error",
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,

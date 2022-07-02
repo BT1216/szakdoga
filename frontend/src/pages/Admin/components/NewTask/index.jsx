@@ -105,7 +105,6 @@ function NewTask({
       }
     } else {
       const modifyObject = { ...newTaskObject, taskId };
-      console.log("modifyObject", modifyObject);
       modifyApiRequestHandler(modifyObject);
     }
   }
@@ -122,15 +121,15 @@ function NewTask({
       <ImageUpload
         deletePreview={deletePreview}
         setTaskImagePath={setTaskImageId}
-        iPreviewImageUrl={taskImagePath}
+        isPreviewImageUrl={taskImagePath}
       />
       <DropDown
         labelValue="Válassz időszakot"
         id="period"
         options={transformPeriodApiRespnse()}
         setValue={setPeriod}
-        loading={loading}
         value={period}
+        loading={loading}
       />
       <DropDown
         labelValue="Válassz témakört"

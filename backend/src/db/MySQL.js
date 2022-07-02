@@ -23,7 +23,9 @@ class MySQL {
   query(queryToExecute) {
     return new Promise((resolve, reject) => {
       this.connection.query(queryToExecute, (err, result) => {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+        }
         resolve(this.convertQueryResultToObject(result));
       });
     });
