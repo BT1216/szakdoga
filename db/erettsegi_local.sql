@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Aug 23, 2022 at 03:27 PM
+-- Generation Time: Sep 06, 2022 at 08:37 PM
 -- Server version: 10.6.4-MariaDB-1:10.6.4+maria~focal
 -- PHP Version: 8.0.19
 
@@ -2297,7 +2297,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `passw`, `is_admin`) VALUES
-(1, 'zilahi@gmail.com', 'Hello', 0),
 (2, 'zilahi_2@gmail.com', 'Hello', 0),
 (3, 'zilahi_3@gmail.com', 'Hello', 0),
 (4, 'test', 'test', 0),
@@ -2324,7 +2323,8 @@ INSERT INTO `users` (`id`, `email`, `passw`, `is_admin`) VALUES
 (25, '1234567@gmail.com', 'du5B5wpXKwPq5G4Vnic7QA==$a9Yqs8NmijPMm5ZVHlrrFlodPytK+dx8ZJFze0+MQsKEmHw/V/EuTxE8QXPhuH11ml7U8BBA8GZK6DGVLdfztw==', 0),
 (26, 'fudhjdiowhjfeior@gmail.com', '/zX7BVpRVGPkl/GxG8egng==$o1W8V3+Ea3jGxywyU5oX9TBLyK3+EX2W5wpUQBfXQ4nXA2kCukWUMJyzWWw8jO4AWsebEuUiUx0Gq6mmBO8pYQ==', 0),
 (27, 'kefhierghufodhglef@gmail.com', 'nGjrprZ/nQu0Grh129/4dA==$A6YYLU9UU7ZWfVGjtrXpHg/tTcfCASkJnySMW91PMZnqsMCZmVNXmyfG7TSa6ERT9aUGmvra1V28w7wF3E9vkw==', 0),
-(28, 'wfjehrgirehgiuerhguireh@gmail.com', 'VSmWXeZXndiX0HOwUfYuUQ==$G//olsDUubCIZw5Zg3e6pz7gLKpHWCYK6Bt7WZQBKlMKRl9D8b+vAxT5e80Sm2DB8j/s3uVs2GBqqO3K3gUIPQ==', 0);
+(28, 'wfjehrgirehgiuerhguireh@gmail.com', 'VSmWXeZXndiX0HOwUfYuUQ==$G//olsDUubCIZw5Zg3e6pz7gLKpHWCYK6Bt7WZQBKlMKRl9D8b+vAxT5e80Sm2DB8j/s3uVs2GBqqO3K3gUIPQ==', 0),
+(29, 'zilahi@gmail.com', 'zOW9POfGiHlTJS752VBslw==$cvvRmfaTaDIJkZCN0DkSuXbDIXEOnt8ApYnZPe/grx9WWaZeui34SrYBsddtnmfnaTOntNthWlD5CGg4EmTRRw==', 1);
 
 --
 -- Indexes for dumped tables
@@ -2395,7 +2395,7 @@ ALTER TABLE `task_images`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables

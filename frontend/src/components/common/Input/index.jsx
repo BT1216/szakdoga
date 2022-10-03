@@ -19,7 +19,7 @@ function Input({
         type={inputType}
         value={value}
         onChange={(event) => onChangeHandler(event.target.value)}
-        placeholder={placeHolder}
+        placeholder={placeHolder && placeHolder}
       />
     </div>
   );
@@ -29,15 +29,17 @@ Input.defaultProps = {
   className: undefined,
   inputType: "text",
   inputLabel: false,
+  value: undefined,
+  placeHolder: undefined,
 };
 
 Input.propTypes = {
   className: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChangeHandler: PropTypes.func.isRequired,
   inputType: PropTypes.oneOf(["text", "password", "number"]),
-  placeHolder: PropTypes.string.isRequired,
-  inputLabel: PropTypes.string,
+  placeHolder: PropTypes.string,
+  inputLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   htmlFor: PropTypes.string.isRequired,
 };
 

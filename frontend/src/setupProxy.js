@@ -4,7 +4,10 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://backend",
+      target:
+        process.env.NODE_ENV === "production"
+          ? "https://math-node-backend.herokuapp.com"
+          : "http://backend",
       pathRewrite: { "^/api": "" },
     }),
   );

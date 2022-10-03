@@ -2,13 +2,17 @@ import morgan from "morgan";
 import express from "express";
 import path from "path";
 
-import database from "./database";
+import dotenv from "dotenv";
+
+// import database from "./database";
 import uploadRoutes from "./files/routes.files";
 import userRoutes from "./user/user.routes";
 import categoriesRoutes from "./categories/categories.routes";
 import periodsRoutes from "./periods/periods.routes";
 import taskRoutes from "./tasks/tasks.routes";
 import systemRouter from "./system/system.routes";
+
+dotenv.config();
 
 const app = express();
 
@@ -17,12 +21,22 @@ app.use(express.json());
 
 app.use("/static", express.static(path.join(__dirname, "../", "public")));
 
-app.get("/", function (req, res, next) {
-  database
-    .raw("select VERSION() version")
-    .then(([rows]) => rows[0])
-    .then((row) => res.json({ message: `Hello from MySQL ${row.version}` }))
-    .catch(next);
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
+  );
+  next();
+});
+
+app.get("/", function (req, res) {
+  res.status(200).send({
+    prod: true,
+    timestamp: new Date().getTime(),
+  });
 });
 
 app.get("/healthz", function (req, res) {

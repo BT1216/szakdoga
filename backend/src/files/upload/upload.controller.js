@@ -1,15 +1,16 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { S3 } from "@aws-sdk/client-s3";
 
 import { imageFilter, storage } from "../storage";
 import { serverConfig } from "../../config";
 import MySQL from "../../db/MySQL";
 import { reject } from "lodash";
 
-const { host, port, user, password } = serverConfig.database;
+const { host, port, user, password, dbName } = serverConfig.database;
 
-const database = new MySQL(host, port, user, password, "erettsegi");
+const database = new MySQL(host, port, user, password, dbName);
 
 /**
  * @param request
@@ -38,6 +39,28 @@ function uploadFile(request, response, next) {
 
     next();
   });
+}
+
+export const s3 = new S3({
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+  },
+});
+
+/**
+ * @param file
+ * @param fileName
+ */
+export async function uploadFileToS3(file, fileName) {
+  const putObjectResult = await s3.putObject({
+    Bucket: "erettsegi-prod",
+    Key: `${fileName}.png`,
+    Body: file,
+  });
+
+  return putObjectResult;
 }
 
 /**
@@ -97,8 +120,11 @@ export async function getFileByName(fileName) {
         const file = files.find((file) => file === `${fileName}.png`);
         if (err) reject(err);
         if (file) {
-          const result = copyFile(newFileDirPath, file);
-          resolve(result);
+          // const result = copyFile(newFileDirPath, file);
+          const thisImageFile = fs.readFileSync(
+            `${newFileDirPath}/${fileName}.png`
+          );
+          resolve(thisImageFile);
         }
       });
     } catch (err) {
@@ -111,7 +137,7 @@ export async function getFileByName(fileName) {
  * @param source
  * @param fileName
  */
-async function copyFile(source, fileName) {
+export async function copyFile(source, fileName) {
   return new Promise(function (resolve) {
     const targetFileDir = path.join(
       __dirname,
@@ -123,8 +149,6 @@ async function copyFile(source, fileName) {
     );
     const newFileName = `file-${Date.now()}.png`;
     fs.copyFileSync(`${source}/${fileName}`, `${targetFileDir}/${newFileName}`);
-    // console.log("newFileName", newFileName);
-    // const newImageQuery = `INSERT INTO task_images (filePath) VALUES ("${newFileName}") `;
     resolve(newFileName);
   });
 }

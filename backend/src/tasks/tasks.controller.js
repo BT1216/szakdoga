@@ -3,9 +3,9 @@ import { sortBy } from "lodash";
 import { serverConfig } from "../config";
 import MySQL from "../db/MySQL";
 
-const { host, port, user, password } = serverConfig.database;
+const { host, port, user, password, dbName } = serverConfig.database;
 
-const database = new MySQL(host, port, user, password, "erettsegi");
+const database = new MySQL(host, port, user, password, dbName);
 
 /**
  * @param request
@@ -83,10 +83,7 @@ export async function getTaskById(request, response) {
 export async function deleteTaskById(request, response) {
   const { taskId } = request.body;
 
-  // console.log("taskId", taskId);
-
   const sqlQuery = `DELETE from tasks WHERE id = "${taskId}"`;
-
   const deleteResponse = await database.query(sqlQuery);
 
   response.status(200).send({

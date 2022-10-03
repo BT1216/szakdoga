@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import Select from "react-select";
+import classnames from "classnames";
 
+import Select from "react-select";
 import styles from "./Dropdown.module.scss";
 
 function DropDown({
@@ -11,12 +12,18 @@ function DropDown({
   value,
   loading,
   isMulti,
+  className,
 }) {
   function handleChange(event) {
     setValue(event);
   }
   return (
-    <div className={styles.dropDownRootContainer}>
+    <div
+      className={classnames([
+        styles.dropDownRootContainer,
+        className && className,
+      ])}
+    >
       <p>{labelValue}</p>
       <Select
         onChange={(event) => handleChange(event)}
@@ -32,12 +39,16 @@ function DropDown({
 }
 
 DropDown.defaultProps = {
-  isMulti: false,
+  isMulti: true,
+  className: null,
+  loading: false,
+  value: null,
 };
 
 DropDown.propTypes = {
   labelValue: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  className: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number,
@@ -45,8 +56,19 @@ DropDown.propTypes = {
     }),
   ).isRequired,
   setValue: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  value: PropTypes.string.isRequired,
+  loading: PropTypes.bool,
+  value: PropTypes.oneOfType([
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ),
+  ]),
   isMulti: PropTypes.bool,
 };
 

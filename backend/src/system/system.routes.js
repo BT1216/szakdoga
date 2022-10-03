@@ -8,12 +8,13 @@ import { getPeriodByPeriodName } from "../periods/periods.controllers";
 import {
   getFileByName,
   saveImageInDatabaseSync,
+  uploadFileToS3,
 } from "../files/upload/upload.controller";
 
 const router = Router();
 
-const { host, port, user, password } = serverConfig.database;
-const database = new MySQL(host, port, user, password, "erettsegi");
+const { host, port, user, password, dbName } = serverConfig.database;
+const database = new MySQL(host, port, user, password, dbName);
 
 /**
  * @param root0
@@ -55,8 +56,13 @@ async function parseJson(request, response) {
       // 2. get category_id by cateogry Name
       const categoryId = await getCategoryIdByCategoryName(task.category);
       const periodId = await getPeriodByPeriodName(task.period);
-      const taskImage = await getFileByName(task.pictureName);
-      const taskImageId = await saveImageInDatabaseSync(taskImage);
+
+      // in production upload image to aws s3
+      const fileToUpload = await getFileByName(task.pictureName);
+      const fileName = `file-${new Date().getTime()}`;
+      await uploadFileToS3(fileToUpload, fileName);
+
+      const taskImageId = await saveImageInDatabaseSync(fileName);
 
       // 3. upload the image
       const singleTask = {
@@ -67,7 +73,9 @@ async function parseJson(request, response) {
         task_point_no: task.task_point_no,
       };
 
-      return insertTask(singleTask);
+      return insertTask(singleTask).then(() => {
+        resolve();
+      });
     });
 
     Promise.all([allTaskPromise])
@@ -83,6 +91,6 @@ async function parseJson(request, response) {
   });
 }
 
-router.post("/parse-tasks", [parseJson]);
+// router.post("/parse-tasks", [parseJson]);
 
 export default router;

@@ -6,8 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { apiEndpoints, API_ROOT_URL } from "../../../api";
 import Button from "../Button";
 import styles from "./Task.module.scss";
+import pointNo2 from "../../../assets/points/2pont.png";
+import pointNo3 from "../../../assets/points/3pont.png";
+import pointNo4 from "../../../assets/points/4pont.png";
 
-function Task({ task, handleTaskDelete, showAdminButtons, TaskInfo }) {
+const taskPointImages = {
+  2: pointNo2,
+  3: pointNo3,
+  4: pointNo4,
+};
+
+function Task({ task, handleTaskDelete, showAdminButtons, renderTaskInfo }) {
   const [isDeleted, setIsDeleted] = useState(false);
 
   const navigate = useNavigate();
@@ -15,6 +24,15 @@ function Task({ task, handleTaskDelete, showAdminButtons, TaskInfo }) {
   function handleDelete() {
     setIsDeleted(true);
     handleTaskDelete(task.id);
+  }
+
+  function filePathUrl() {
+    if (process.env.NODE_ENV === "production") {
+      return `https://erettsegi-prod.s3.amazonaws.com/${task.filePath}.png`;
+    }
+
+    return `https://erettsegi-prod.s3.amazonaws.com/${task.filePath}.png`;
+    // return `${API_ROOT_URL}${apiEndpoints.static}/${task.filePath}`;
   }
 
   return (
@@ -32,23 +50,25 @@ function Task({ task, handleTaskDelete, showAdminButtons, TaskInfo }) {
       >
         {showAdminButtons ? (
           <div className={styles.metaContainer}>
-            <p>Témakör: {task.categoryName}</p>
-            <p>Érettségi időszak: {task.periodName}</p>
-            <p>
-              Feladat sorszáma:
-              {task.task_no}
-            </p>
-            <p>Feladat pontszáma: {task.task_point_no}</p>
+            <p>{`Témakör: ${task.categoryName}`}</p>
+            <p>{`Érettségi időszak: ${task.periodName}`}</p>
+            <p>{`Feladat sorszáma: ${task.task_no}`}</p>
+            <p>{`Feladat pontszáma: ${task.task_point_no}`}</p>
           </div>
         ) : (
-          <TaskInfo />
+          renderTaskInfo()
         )}
 
         <div className={styles.imageContainer}>
-          <img
-            src={`${API_ROOT_URL}${apiEndpoints.static}/${task.filePath}`}
-            alt="feadat"
-          />
+          <img src={filePathUrl()} alt="feladat" />
+          <div
+            className={classnames([
+              "point-image",
+              styles.taskPointImageContainer,
+            ])}
+          >
+            <img alt="pont" src={taskPointImages[task.task_point_no]} />
+          </div>
         </div>
       </div>
       {showAdminButtons && (
@@ -73,24 +93,23 @@ function Task({ task, handleTaskDelete, showAdminButtons, TaskInfo }) {
 Task.defaultProps = {
   handleTaskDelete: null,
   showAdminButtons: true,
-  TaskInfo: null,
+  renderTaskInfo: undefined,
 };
 
 Task.propTypes = {
   task: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    task_image_id: PropTypes.number.isRequired,
     category_id: PropTypes.number.isRequired,
-    period_id: PropTypes.number.isRequired,
-    task_no: PropTypes.number.isRequired,
     task_point_no: PropTypes.number.isRequired,
     filePath: PropTypes.string.isRequired,
     categoryName: PropTypes.string.isRequired,
     periodName: PropTypes.string.isRequired,
+    // eslint-disable-next-line camelcase
+    task_no: PropTypes.number.isRequired,
   }).isRequired,
   handleTaskDelete: PropTypes.func,
   showAdminButtons: PropTypes.bool,
-  TaskInfo: PropTypes.node,
+  renderTaskInfo: PropTypes.func,
 };
 
 export default Task;

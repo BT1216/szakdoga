@@ -5,9 +5,10 @@ class MySQL {
     this.host = host;
     this.user = user;
     this.password = password;
-    this.database = database;
+    this.database =
+      process.env.ENVIRONMENT === "production" ? database : "erettsegi";
     this.port = port;
-    this.connection = mysql.createConnection({
+    this.connection = mysql.createPool({
       host: this.host,
       user: this.user,
       password: this.password,
@@ -25,6 +26,7 @@ class MySQL {
       this.connection.query(queryToExecute, (err, result) => {
         if (err) {
           reject(err);
+          console.log("mysqlError", err);
         }
         resolve(this.convertQueryResultToObject(result));
       });

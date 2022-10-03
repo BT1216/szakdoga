@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { sortBy } from "lodash";
 
 import DropDown from "../../../../components/common/Dropdown";
 import useApi from "../../../../hooks/useAPI";
@@ -11,13 +12,14 @@ import styles from "./NewTask.module.scss";
 import SuccessNotification from "../../../../components/common/components/SuccessNotification";
 import { newTaskSchema } from "../../../../api/schemas";
 import Error from "../../../../components/common/Error";
+import { getPeriodTimeStamp } from "../../../../utils/periods";
 
 function NewTask({
   taskImageId: iTaskImageId = null,
   category: iCategory = null,
   period: iPeriod = null,
-  taskPoint: iTaskPoint = null,
-  taskNo: iTaskNo = null,
+  taskPoint: iTaskPoint = undefined,
+  taskNo: iTaskNo = undefined,
   isModify = false,
   taskId = null,
   taskImagePath = null,
@@ -30,21 +32,17 @@ function NewTask({
   const [deletePreview, setDeletePreview] = useState(false);
   const [taskPoint, setTaskPoint] = useState(iTaskPoint);
   const [taskNo, setTaskNo] = useState(iTaskNo);
-  const { apiReponse, loading } = useApi({
+  const { apiReponse: periodsApiResponse, loading } = useApi({
     method: "GET",
     pathName: apiEndpoints.periods,
   });
 
-  const {
-    apiReponse: modifyApiResponse,
-    loading: modifyApiLoading,
-    apiRequestHandler: modifyApiRequestHandler,
-  } = useApi({
+  const { apiRequestHandler: modifyApiRequestHandler } = useApi({
     method: "PATCH",
     pathName: apiEndpoints.modifyTask,
   });
 
-  const { apiReponse: categories } = useApi({
+  const { apiReponse: categoriesApiResponse } = useApi({
     method: "GET",
     pathName: apiEndpoints.categories,
   });
@@ -54,20 +52,22 @@ function NewTask({
     pathName: apiEndpoints.newTask,
   });
 
-  function transformPeriodApiRespnse() {
-    if (apiReponse && Array.isArray(apiReponse)) {
-      return apiReponse.map((currentPeriod) => ({
+  function transformPeriodApiResponse() {
+    if (periodsApiResponse && Array.isArray(periodsApiResponse)) {
+      const resp = periodsApiResponse.map((currentPeriod) => ({
         label: currentPeriod.periodName,
         value: currentPeriod.id,
+        periodTimestamp: getPeriodTimeStamp(currentPeriod.periodName),
       }));
+      return sortBy(resp, ["periodTimestamp"]);
     }
 
     return [];
   }
 
   function transformCategoriesApiResponse() {
-    if (categories && Array.isArray(categories)) {
-      return categories.map((currentCat) => ({
+    if (categoriesApiResponse && Array.isArray(categoriesApiResponse)) {
+      return categoriesApiResponse.map((currentCat) => ({
         label: currentCat.name,
         value: currentCat.id,
       }));
@@ -126,10 +126,11 @@ function NewTask({
       <DropDown
         labelValue="Válassz időszakot"
         id="period"
-        options={transformPeriodApiRespnse()}
+        options={transformPeriodApiResponse()}
         setValue={setPeriod}
         value={period}
         loading={loading}
+        isMulti={false}
       />
       <DropDown
         labelValue="Válassz témakört"
@@ -138,8 +139,10 @@ function NewTask({
         setValue={setCategory}
         loading={false}
         value={category}
+        isMulti={false}
       />
       <Input
+        htmlFor="point"
         value={taskPoint}
         onChangeHandler={setTaskPoint}
         placeholder="Pontszám"
@@ -148,6 +151,7 @@ function NewTask({
         className={styles.input}
       />
       <Input
+        htmlFor="taskNo"
         value={taskNo}
         onChangeHandler={setTaskNo}
         placeholder="Feladat sorszáma"
@@ -164,8 +168,8 @@ NewTask.defaultProps = {
   taskImageId: null,
   category: null,
   period: null,
-  taskPoint: null,
-  taskNo: null,
+  taskPoint: undefined,
+  taskNo: undefined,
   isModify: false,
   taskId: null,
   taskImagePath: null,
